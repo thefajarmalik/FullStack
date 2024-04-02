@@ -1,0 +1,17 @@
+# fly.toml app configuration file generated for white-brook-1581 on 2024-04-02T09:25:18+03:00
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
+
+app = "white-brook-1581"
+primary_region = "ams"
+
+[env]
+  PORT = "3000"
+
+[http_service]
+  internal_port = 3000
+  force_https = true
+  auto_stop_machines = true
+  auto_start_machines = true
+  min_machines_running = 0
