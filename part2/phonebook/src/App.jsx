@@ -62,11 +62,17 @@ const App = () => {
           setFilteredPersons(persons.concat(returnedPerson))
           setNewName('')
           setNewNumber('')
-
           setMessage(
             `Added ${newName}`
           )
           setError(false)
+          setTimeout(() => {
+            setMessage(null)
+          }, 5000)
+        })
+        .catch(error => {
+          setError(true)
+          setMessage(error.response.data.error)
           setTimeout(() => {
             setMessage(null)
           }, 5000)
@@ -112,7 +118,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <Notification message={message} error={error}/>
+      <Notification message={message} error={error} />
 
       <Filter handleFilterChange={handleFilterChange} filter={filter} />
 

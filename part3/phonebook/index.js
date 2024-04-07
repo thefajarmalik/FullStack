@@ -49,7 +49,7 @@ app.get('/api/persons/:id', (request, response) => {
     })
 })
 
-app.post('/api/persons', (request, response) => {
+app.post('/api/persons', (request, response, next) => {
     const body = request.body
 
     if (body.name === undefined || body.number === undefined) {
@@ -61,22 +61,22 @@ app.post('/api/persons', (request, response) => {
         number: body.number,
     })
 
-    const existingPersons = []
     Person.find({ name: body.name }).then(persons => {
-        existingPersons = [...persons]
+        const existingPersons = [...persons]
+        if (existingPersons.length > 0) {
+            Person.findByIdAndUpdate(existingPersons[0].id, person, { new: true })
+                .then(updatedPerson => {
+                    response.json(updatedPerson)
+                })
+                .catch(error => next(error))
+        }
     })
 
-    if (existingPersons.length > 0) {
-        Person.findByIdAndUpdate(existingPersons[0].id, person, { new: true })
-            .then(updatedPerson => {
-                response.json(updatedPerson)
-            })
-            .catch(error => next(error))
-    }
-
-    person.save().then(savedPerson => {
-        response.json(savedPerson)
-    })
+    person.save()
+        .then(savedPerson => {
+            response.json(savedPerson)
+        })
+        .catch(error => next(error))
 })
 
 app.put('/api/persons/:id', (request, response, next) => {
@@ -117,6 +117,8 @@ const errorHandler = (error, request, response, next) => {
 
     if (error.name === 'CastError') {
         return response.status(400).send({ error: 'malformatted id' })
+    } else if (error.name === 'ValidationError') {
+        return response.status(400).json({ error: error.message })
     }
 
     next(error)
