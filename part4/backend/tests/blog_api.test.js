@@ -106,6 +106,42 @@ test('if title is missing, respond 400', async () => {
   assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length)
 })
 
+test('can delete a blog', async () => {
+  const blogsAtStart = await helper.blogsInDb()
+  const blogToDelete = blogsAtStart[0]
+
+  await api.delete(`/api/blogs/${blogToDelete.id}`).expect(204)
+
+  const blogsAtEnd = await helper.blogsInDb()
+
+  assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length - 1)
+
+  const titles = blogsAtEnd.map(r => r.title)
+  assert(!titles.includes(blogToDelete.content))
+})
+
+test('can update a blog', async () => {
+  const blogsAtStart = await helper.blogsInDb()
+  const blogToUpdate = blogsAtStart[0]
+
+  const newBlog = {
+    title: 'Lets just say this is a title',
+    author: 'John Doe',
+    url: 'https://lskdjfs.com/sldksdjfsdlfkjs.pdf',
+    likes: 10
+  }
+
+  await api.put(`/api/blogs/${blogToUpdate.id}`).send(newBlog).expect(200)
+
+  const blogsAtEnd = await helper.blogsInDb()
+  const updatedBlog = blogsAtEnd.find(blog => blog.id === blogToUpdate.id)
+
+  assert.strictEqual(updatedBlog.title, newBlog.title)
+  assert.strictEqual(updatedBlog.author, newBlog.author)
+  assert.strictEqual(updatedBlog.url, newBlog.url)
+  assert.strictEqual(updatedBlog.likes, newBlog.likes)
+})
+
 after(async () => {
   await mongoose.connection.close()
 })
