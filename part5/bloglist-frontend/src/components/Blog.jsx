@@ -16,7 +16,7 @@ const Blog = ({ blog, addLike, deleteBlog }) => {
 
   if (!detailIsVisible) {
     return (
-      <div style={blogStyle}>
+      <div style={blogStyle} data-testid='blogitem'>
         <p>
           {blog.title} {blog.author}{' '}
           <button onClick={() => toggleDetailIsVisible(true)}>show</button>
@@ -26,7 +26,7 @@ const Blog = ({ blog, addLike, deleteBlog }) => {
   } else {
     console.log(blog)
     return (
-      <div style={blogStyle}>
+      <div style={blogStyle} data-testid='blogitem-expanded'>
         <p className='title-author'>
           {blog.title} {blog.author}{' '}
           <button onClick={() => toggleDetailIsVisible(false)}>hide</button>
