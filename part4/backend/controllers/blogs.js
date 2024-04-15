@@ -44,7 +44,9 @@ blogsRouter.delete(
   async (request, response) => {
     const blog = await Blog.findById(request.params.id)
     console.log(blog)
-    console.log(`User ${request.user.id} is trying to delete blog created by ${blog.user}`)
+    console.log(
+      `User ${request.user.id} is trying to delete blog created by ${blog.user}`
+    )
     if (blog.user.toString() !== request.user.id.toString()) {
       return response
         .status(401)
@@ -68,7 +70,7 @@ blogsRouter.put('/:id', async (request, response, next) => {
 
   const updatedBlog = await Blog.findByIdAndUpdate(request.params.id, blog, {
     new: true
-  })
+  }).populate('user', { username: 1, name: 1 })
   response.json(updatedBlog)
 })
 
