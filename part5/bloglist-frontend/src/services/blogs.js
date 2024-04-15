@@ -28,7 +28,7 @@ const update = async (id, newObject) => {
   return response.data
 }
 
-const deleteBlog = async (id) => {
+const deleteBlog = async id => {
   const config = {
     headers: { Authorization: token }
   }
@@ -36,4 +36,4 @@ const deleteBlog = async (id) => {
   return response.data
 }
 
-export default { getAll, setToken, create, update, deleteBlog}
+export default { getAll, setToken, create, update, deleteBlog }
