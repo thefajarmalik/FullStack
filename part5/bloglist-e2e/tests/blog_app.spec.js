@@ -72,12 +72,10 @@ describe('Blog app', () => {
       page
     }) => {
       await page.getByRole('button', { name: 'show' }).click()
-      await page.getByRole('button', { name: 'like' }).click()
+      page.on('dialog', async dialog => await dialog.accept())
       await page.getByRole('button', { name: 'remove' }).click()
-      await expect(page.getByTestId('blogitem')).not.toContainText([
-        'This is blog title',
-        'John Doe'
-      ])
+      await expect(page.getByTestId('blogitem-expanded')).not.toBeVisible()
+      await expect(page.getByTestId('blogitem')).not.toBeVisible()
     })
     test('the user who did not add the blog cannot delete the blog', async ({
       page
