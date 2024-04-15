@@ -9,9 +9,9 @@ const Blog = ({ blog, addLike, deleteBlog }) => {
     borderWidth: 1,
     marginBottom: 5
   }
-  const getLoggedUser = () => {
+  const getLoggedUserName = () => {
     const user = window.localStorage.getItem('loggedBlogappUser')
-    return user ? JSON.parse(user) : null
+    return user ? JSON.parse(user).username : null
   }
 
   if (!detailIsVisible) {
@@ -27,17 +27,17 @@ const Blog = ({ blog, addLike, deleteBlog }) => {
     console.log(blog)
     return (
       <div style={blogStyle}>
-        <p>
+        <p className='title-author'>
           {blog.title} {blog.author}{' '}
           <button onClick={() => toggleDetailIsVisible(false)}>hide</button>
         </p>
-        <p>{blog.url}</p>
-        <p>
+        <p className='url'>{blog.url}</p>
+        <p className='likes'>
           likes {blog.likes}{' '}
           <button onClick={() => addLike(blog.id, blog)}>like</button>
         </p>
         <p>{blog.user.name}</p>
-        {getLoggedUser().username === blog.user.username && (
+        {getLoggedUserName() === blog.user.username && (
           <button onClick={() => deleteBlog(blog)}>remove</button>
         )}
       </div>
