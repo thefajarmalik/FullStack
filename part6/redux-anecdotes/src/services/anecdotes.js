@@ -12,8 +12,14 @@ const createNew = async content => {
   const response = await axios.post(baseUrl, object)
   return response.data
 }
+const addLike = async anecdote => {
+  const newAnecdote = { ...anecdote, votes: anecdote.votes + 1 }
+  const response = await axios.put(`${baseUrl}/${anecdote.id}`, newAnecdote)
+  return response.data
+}
 
 export default {
   getAll,
-  createNew
+  createNew,
+  addLike
 }
